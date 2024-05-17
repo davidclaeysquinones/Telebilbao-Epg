@@ -47,7 +47,7 @@ RUN chown -R app:app /App/* \
     && mkdir /data && chmod 755 /data \
 	&& cat > /data/telebilbaoEpg.db  \
     && chmod 777 /data/telebilbaoEpg.db \
-	&& chown -R app:app /data/* \
+	&& chown -R app:app /data/*
 ENTRYPOINT echo "$(envsubst '${MOVIE_API_URL},${MOVIE_API_KEY},${MOVIE_IMAGE_URL},${$JOB_SCHEDULE}' < appsettings.json)" > appsettings.json \
 			&& dotnet "TelebilbaoEpg.dll"
 EXPOSE 80 
