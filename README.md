@@ -39,3 +39,18 @@ In order to get your API key follow the steps on [this](https://developer.themov
 | MOVIE_IMAGE_URL               | The base url for images on the movie API                               | https://image.tmdb.org        |    
 | MOVIE_API_KEY                 | The API key for the API                                                | N/A                           |
 
+### Compose file
+
+```sh
+version: '3.3'
+services:
+  epg:
+    image: git.claeyscloud.com/david/telebilbao-epg:latest
+	ports:
+      - 6060:443
+    environment:
+      # specify the time zone for the server
+      - TZ=Etc/UTC
+	  - MOVIE_API_KEY=YOUR_KEY
+    restart: unless-stopped
+```
