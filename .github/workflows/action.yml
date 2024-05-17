@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-          working-directory: ${{ GITHUB_WORKSPACE }}
+          working-directory: '${{ GITHUB_WORKSPACE }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
