@@ -22,10 +22,20 @@ Parameters :
 - from : start date to get the schedule
 - to : end date to get the schedule
 
-## Pending
+## Movie API
 
-Sometimes movies are emitted on this channel.
-The titles are mentioned in Spanish together with the release year.
-First the IMDB API was considered to acomplish this but it might not work with Spanish retro titles.
-Furthermore the IMDB requires an API token which would make the scraper more difficult to use.
-An alternative that supports Spanish and without API tokens needs to be found.
+For movies the page does not contain any metada or poster.
+In order to get this data [TMDB](https://developer.themoviedb.org/reference/intro/getting-started) is used.
+In order to get your API key follow the steps on [this](https://developer.themoviedb.org/docs/getting-started) page.
+
+## Docker image
+
+### Environment Variables
+
+| Variable                      | Description                                                            | Default                       |
+|-------------------------------|------------------------------------------------------------------------|-------------------------------|
+| JOB_SCHEDULE                  | Cron expression indicating the scraping recurrence                     | 0 0/30 * * * ?                |
+| MOVIE_API_URL                 | The url to the movie API                                               | https://api.themoviedb.org/   |
+| MOVIE_IMAGE_URL               | The base url for images on the movie API                               | https://image.tmdb.org        |    
+| MOVIE_API_KEY                 | The API key for the API                                                | N/A                           |
+

@@ -17,6 +17,8 @@ RUN apk update \
     && apk upgrade --available \
 	&& apk add ca-certificates \
 	&& apk add  tzdata \
+	&& apk add envsubst \
+	&& apk add bash \
 	&& mkdir /config && mkdir -p /usr/local/share/ca-certificates/
 COPY --from=build-env /App/out . 
 COPY --from=build-env /config /config
@@ -26,6 +28,10 @@ ENV ASPNETCORE_URLS=http://+:80;https://+:443
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/aspnetapp.crt
 ENV ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/usr/local/share/ca-certificates/aspnetapp.key
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=$CERT_PASSWORD
+ENV JOB_SCHEDULE="0 0/30 * * * ?"
+ENV MOVIE_API_URL=https://api.themoviedb.org/
+ENV MOVIE_API_KEY=""
+ENV MOVIE_IMAGE_URL=https://image.tmdb.org
 RUN chown -R app:app /App/* \
     && cp /config/aspnetapp.pem $ASPNETCORE_Kestrel__Certificates__Default__Path \
 	&& cp /config/aspnetapp.key $ASPNETCORE_Kestrel__Certificates__Default__KeyPath \
@@ -41,8 +47,8 @@ RUN chown -R app:app /App/* \
     && mkdir /data && chmod 755 /data \
 	&& cat > /data/telebilbaoEpg.db  \
     && chmod 777 /data/telebilbaoEpg.db \
-	&& chown -R app:app /data/*
-
-ENTRYPOINT ["dotnet", "TelebilbaoEpg.dll"]
+	&& chown -R app:app /data/* \
+ENTRYPOINT echo "$(envsubst '${MOVIE_API_URL},${MOVIE_API_KEY},${MOVIE_IMAGE_URL},${$JOB_SCHEDULE}' < appsettings.json)" > appsettings.json \
+			&& dotnet "TelebilbaoEpg.dll"
 EXPOSE 80 
 EXPOSE 443

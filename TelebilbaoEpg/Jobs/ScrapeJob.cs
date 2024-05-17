@@ -7,6 +7,8 @@ using System.Web;
 using TableSpans.HtmlAgilityPack;
 using TelebilbaoEpg.Database.Models;
 using TelebilbaoEpg.Database.Repository;
+using Telebilbap_Epg.Services;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TelebilbaoEpg.Jobs
 {
@@ -14,11 +16,13 @@ namespace TelebilbaoEpg.Jobs
     {
         private IConfiguration _configuration;
         private IBroadCastRepository _broadCastRepository;
+        private IMovieService _movieService;
 
-        public ScrapeJob(IConfiguration configuration, IBroadCastRepository broadCastRepository)
+        public ScrapeJob(IConfiguration configuration, IBroadCastRepository broadCastRepository, IMovieService movieService)
         {
             _configuration = configuration;
             _broadCastRepository = broadCastRepository;
+            _movieService = movieService;
         }
 
         private List<TimeBlock> GetTimeBlocks(HtmlNode programTable)
@@ -510,7 +514,44 @@ namespace TelebilbaoEpg.Jobs
             var startSaveDate = parsedBroadCasts.Min(x => x.From);
             var endSaveDate = parsedBroadCasts.Max(x => x.To);
 
+            var movieIndicator = "Cine.";
+            var movies = parsedBroadCasts.Where(b => b.Name.Contains(movieIndicator))
+                .ToList();
+
+            foreach(var movie in movies)
+            {
+                string yearPattern = "(\\d{4})";
+
+                var textWithoutIndicator = movie.Name.Replace(movieIndicator, string.Empty).Trim();
+
+                var match = Regex.Match(textWithoutIndicator, yearPattern);
+                int? year = null;
+
+                if (match.Success)
+                {
+                    year = int.Parse(match.Value);
+                }
+
+                var title = textWithoutIndicator;
+
+                if (year.HasValue)
+                {
+                    var yearIndex = textWithoutIndicator.IndexOf(year.Value.ToString());
+                    title = textWithoutIndicator.Substring(0, yearIndex).Replace(".", "").Trim();
+                }
+
+                var foundMovie = await _movieService.GetMovie(title, year);
+
+                if (foundMovie != null)
+                {
+                    movie.Name = foundMovie.Title;
+                    movie.Description = foundMovie.Description;
+                    movie.ImageUrl = foundMovie.ImageUrl;
+                }
+            }
+
             var savedBroadCasts = _broadCastRepository.GetBroadCasts(DateOnly.FromDateTime(startSaveDate), DateOnly.FromDateTime(endSaveDate));
+
 
             foreach (var broadcast in parsedBroadCasts)
             {

@@ -1,6 +1,7 @@
 using Quartz;
 using TelebilbaoEpg.Database.Repository;
 using TelebilbaoEpg.Jobs;
+using Telebilbap_Epg.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddQuartz();
 builder.Services.AddQuartzHostedService(opt =>
 {
@@ -20,6 +23,7 @@ builder.Services.AddQuartzHostedService(opt =>
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IBroadCastRepository, BroadCastRepository>();
 
 var app = builder.Build();
