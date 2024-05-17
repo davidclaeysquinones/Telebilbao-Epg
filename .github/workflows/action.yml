@@ -23,4 +23,4 @@ jobs:
           context: .
           push: true
           tags: |
-            telebilbao-epg:latest
+            ghcr.io/davidclaeysquinones/telebilbao-epg:latest
