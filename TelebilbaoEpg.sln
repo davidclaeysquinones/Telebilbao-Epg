@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelebilbaoEpg", "TelebilbaoEpg\TelebilbaoEpg.csproj", "{D9128F6D-C239-40E0-83DB-E98FEE81B5F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelebilbaoEpg.Database", "TelebilbaoEpg.Database\TelebilbaoEpg.Database.csproj", "{ABDB2C86-77F1-4E3F-A224-F1066323BCDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelebilbaoEpg.Database", "TelebilbaoEpg.Database\TelebilbaoEpg.Database.csproj", "{ABDB2C86-77F1-4E3F-A224-F1066323BCDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
