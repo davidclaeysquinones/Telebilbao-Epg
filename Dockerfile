@@ -1,5 +1,5 @@
 ARG CERT_PASSWORD_ARG=3vo3rmb5DBJXsryjMfJsrpjbKsbj8B
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine-amd64 as build-env
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine-amd64 as build-env
 ARG CERT_PASSWORD_ARG
 ENV CERT_PASSWORD=$CERT_PASSWORD_ARG
 WORKDIR /App
@@ -9,7 +9,7 @@ RUN dotnet restore \
 	&& dotnet dev-certs https --export-path /config/aspnetapp.pem --password "$CERT_PASSWORD" --format PEM \
 	&& rm **/appsettings.Development.json && rm **/*.pdb
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine-amd64
 ARG CERT_PASSWORD_ARG
 ENV CERT_PASSWORD=$CERT_PASSWORD_ARG
 WORKDIR /App
