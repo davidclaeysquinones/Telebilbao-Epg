@@ -1,11 +1,12 @@
 ARG CERT_PASSWORD_ARG=3vo3rmb5DBJXsryjMfJsrpjbKsbj8B
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine-amd64 as build-env
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine-amd64 AS build-env
 ARG CERT_PASSWORD_ARG
 ENV CERT_PASSWORD=$CERT_PASSWORD_ARG
 WORKDIR /App
 COPY . ./
 RUN dotnet restore \
 	&& dotnet publish TelebilbaoEpg/TelebilbaoEpg.csproj --no-restore --self-contained false -c Release -o out /p:UseAppHost=false \
+	&& mkdir /config \
 	&& dotnet dev-certs https --export-path /config/aspnetapp.pem --password "$CERT_PASSWORD" --format PEM \
 	&& rm **/appsettings.Development.json && rm **/*.pdb
 
